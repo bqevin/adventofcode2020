@@ -9,7 +9,7 @@ defmodule AdventOfCode.Input do
   ## Examples
 
       iex> AdventOfCode.Input.load_file()
-      
+
 
   """
   def load_file(filename) do
@@ -17,7 +17,7 @@ defmodule AdventOfCode.Input do
 
     abs_flname = Path.expand("./inputs/" <> filename <> ".txt") |> Path.absname()
 
-    case File.read(abs_flname) do
+    case File.read!(abs_flname) do
       {:ok, binary} -> String.split(binary, "\n", trim: true)
       {:error, _} -> "file with the name not found"
     end
