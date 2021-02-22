@@ -52,12 +52,14 @@ defmodule AdventOfCode do
       values,
       fn line ->
         [range, letter, pass] = String.split(line, " ", trim: true)
-        [a_range, b_range] = String.split(range, "-", trim: true)
+        [l_range, r_range] = String.split(range, "-", trim: true)
         [needle] = String.split(letter, ":", trim: true)
         chars = String.split(pass, "", trim: true)
 
-        found = Enum.count(chars, fn n -> n == needle end)
-        found >= to_int(a_range) && found <= to_int(b_range)
+        a = Enum.fetch!(chars, to_int(l_range) - 1)
+        b = Enum.fetch!(chars, to_int(r_range) - 1)
+
+        (a == needle || b == needle) && a != b
       end
     )
   end
