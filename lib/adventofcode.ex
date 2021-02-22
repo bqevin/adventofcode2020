@@ -16,15 +16,49 @@ defmodule AdventOfCode do
   """
   def input(file) do
     Input.load_file(file)
-    |> combinatorial
+  end
+
+  def check_combos do
+    input(1) |> combinatorial
+  end
+
+  def check_pass_policy do
+    input(2) |> passwords_policy
+  end
+
+  def check_null(values \\ []) do
+    if is_nil(values), do: raise("You've to add input file ")
+  end
+
+  def to_int(val) do
+    String.to_integer(val)
   end
 
   def combinatorial(values \\ []) do
+    check_null(values)
+
     for n <- values, m <- values, o <- values do
-      if String.to_integer(n) + String.to_integer(m) + String.to_integer(o) == 2020 do
-        value = String.to_integer(n) * String.to_integer(m) * String.to_integer(o)
+      if to_int(n) + to_int(m) + to_int(o) == 2020 do
+        value = to_int(n) * to_int(m) * to_int(o)
         IO.puts("Multiplied value = #{value}..from: #{m}, #{n}, #{o} ")
       end
     end
+  end
+
+  def passwords_policy(values \\ []) do
+    check_null(values)
+
+    Enum.count(
+      values,
+      fn line ->
+        [range, letter, pass] = String.split(line, " ", trim: true)
+        [a_range, b_range] = String.split(range, "-", trim: true)
+        [needle] = String.split(letter, ":", trim: true)
+        chars = String.split(pass, "", trim: true)
+
+        found = Enum.count(chars, fn n -> n == needle end)
+        found >= to_int(a_range) && found <= to_int(b_range)
+      end
+    )
   end
 end
