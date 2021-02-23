@@ -26,6 +26,10 @@ defmodule AdventOfCode do
     input(2) |> passwords_policy
   end
 
+  def check_number_of_trees do
+    input(3) |> tree_encounters
+  end
+
   def check_null(values \\ []) do
     if is_nil(values), do: raise("You've to add input file ")
   end
@@ -62,5 +66,29 @@ defmodule AdventOfCode do
         (a == needle || b == needle) && a != b
       end
     )
+  end
+
+  def tree_encounters(values \\ []) do
+    values |> check_null
+
+    Counter.start_link(0)
+
+    trees =
+      Enum.count(
+        values,
+        fn line ->
+          elongated_line = String.duplicate(line, round(length(values) / 3))
+
+          chars = String.split(elongated_line, "", trim: true)
+          Counter.increment()
+          count = Counter.value()
+          tree_or_not = if count > 1, do: Enum.at(chars, (count - 1) * 3), else: ""
+          tree_or_not == "#"
+        end
+      )
+
+    Counter.reset()
+
+    trees
   end
 end
